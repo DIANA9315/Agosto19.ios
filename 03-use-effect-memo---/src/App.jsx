@@ -9,7 +9,7 @@ function App () {
     { id: 4, nombre: 'María', pais: 'Colombia' },
     { id: 5, nombre: 'Pedro', pais: 'Chile' },
     { id: 6, nombre: 'Sofia', pais: 'Perú' },
-    { id: 7, nombre: 'Diego', pais: 'Uruguay' },
+    { id: 7, nombre: 'Dan', pais: 'Uruguay' },
     { id: 8, nombre: 'Carmen', pais: 'Venezuela' },
     { id: 9, nombre: 'Roberto', pais: 'Ecuador' },
     { id: 10, nombre: 'Isabella', pais: 'Costa Rica' }
