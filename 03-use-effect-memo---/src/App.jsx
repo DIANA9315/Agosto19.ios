@@ -1,33 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect, useMemo } from 'react'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+function App () {
+  const listaDeUsuarios = [
+    { id: 1, nombre: 'Luis', pais: 'México' },
+    { id: 2, nombre: 'Ana', pais: 'España' },
+    { id: 3, nombre: 'Carlos', pais: 'Argentina' },
+    { id: 4, nombre: 'María', pais: 'Colombia' },
+    { id: 5, nombre: 'Pedro', pais: 'Chile' },
+    { id: 6, nombre: 'Sofia', pais: 'Perú' },
+    { id: 7, nombre: 'Diego', pais: 'Uruguay' },
+    { id: 8, nombre: 'Carmen', pais: 'Venezuela' },
+    { id: 9, nombre: 'Roberto', pais: 'Ecuador' },
+    { id: 10, nombre: 'Isabella', pais: 'Costa Rica' }
+  ]
+
+  // Crear los estaods para manejar: usuarios, busqueda, la carga y el tema.
+  const [usuarios, setUsuarios] = useState([])
+  const [busqueda, setBusqueda] = useState('')
+  const [cargando, setCargando] = useState(true)
+  const [tema, setTema] = useState('light')
+
+  // Función que simula una lladada a la API para cargar usuarios.
+  const fetchUsuarios = () => {
+    return new Promise((resolve) => {
+      console.log('Cargando usuarios...')
+      setTimeout(() => {
+        resolve(listaDeUsuarios)
+      }, 2500)
+    })
+  }
+
+  // useEffect: Lo usamos para cargar los datos (en este caso los usuarios) al iniciar el componente.
+  useEffect(() => {
+    setCargando(true)
+    fetchUsuarios().then((usuarios) => {
+      setUsuarios(usuarios)
+      setCargando(false)
+    })
+  }, [])
+
+  // useMemo: Lo usamos para filtrar los usuarios en función de la búsqueda.
+  const usuariosFiltrados = useMemo(() => {
+    return usuarios.filter((usuario) => {
+      return usuario.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    })
+  }, [usuarios, busqueda])
+
+  const estilo = {
+    backgroundColor: tema === 'light' ? '#fff' : '#333',
+    color: tema === 'light' ? '#333' : '#fff',
+    padding: '20px',
+    borderRadius: '5px',
+    transition: 'all 0.3s ease'
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div style={estilo}>
+        <h1>Lista de Usuarios</h1>
+        <input
+          type='text'
+          placeholder='Buscar usuario'
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+        <button onClick={() => setTema(tema === 'light' ? 'dark' : 'light')}>
+          Cambiar tema
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        {cargando
+          ? (
+            <p>Cargando...</p>
+            )
+          : (
+            <ul>
+              {usuariosFiltrados.map((usuario) => (
+                <li key={usuario.id}>
+                  {usuario.nombre} - {usuario.pais}
+                </li>
+              ))}
+            </ul>
+            )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
